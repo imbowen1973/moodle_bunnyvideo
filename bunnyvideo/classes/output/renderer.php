@@ -125,6 +125,8 @@ class renderer extends \plugin_renderer_base {
         $cmid = (int)$cm->id;
         $enabled = $completionEnabled ? 'true' : 'false';
         $threshold = (int)$threshold;
+        $progressstr = get_string('progress', 'bunnyvideo');
+        $completedstr = get_string('completed', 'bunnyvideo');
 
         return \html_writer::script("
             (function() {
@@ -142,6 +144,8 @@ class renderer extends \plugin_renderer_base {
                 var threshold = $threshold;
                 var completionEnabled = $enabled;
                 var lastSaveTime = 0;
+                var progressLabel = '$progressstr';
+                var completedLabel = '$completedstr';
 
                 player.ready(function() {
                     if (completionEnabled && {$progress['watchtime']} > 0) {
@@ -152,6 +156,7 @@ class renderer extends \plugin_renderer_base {
                         var duration = Math.floor(player.duration() || 0);
                         if (completionEnabled && duration > 0) {
                             updateProgressBarOverlay(duration);
+                            updateProgressBar(duration);
                         }
                     });
                 });
@@ -175,11 +180,13 @@ class renderer extends \plugin_renderer_base {
                         }
 
                         updateProgressBarOverlay(duration);
+                        updateProgressBar(duration);
                     });
 
                     player.on('ended', function() {
                         var duration = Math.floor(player.duration() || 0);
                         saveProgress(duration, duration, duration);
+                        updateProgressBar(duration);
                     });
                 }
 
@@ -198,6 +205,20 @@ class renderer extends \plugin_renderer_base {
                     var lockedPercent = 100 - ((maxWatched / duration) * 100);
                     overlay.style.width = lockedPercent + '%';
                     overlay.style.right = '0';
+                }
+
+                function updateProgressBar(duration) {
+                    var fill = document.getElementById('progress-fill');
+                    var label = document.getElementById('progress-text');
+                    if (!fill || !label || duration === 0) return;
+
+                    var percent = Math.floor((maxWatched / duration) * 100);
+                    if (percent > 100) percent = 100;
+                    fill.style.width = percent + '%';
+                    label.textContent = progressLabel + ': ' + percent + '%';
+                    if (percent >= threshold) {
+                        label.textContent += ' - ' + completedLabel;
+                    }
                 }
 
                 function saveProgress(watchtime, duration, maxwatched) {
