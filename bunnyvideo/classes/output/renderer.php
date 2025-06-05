@@ -13,9 +13,9 @@ class renderer extends \plugin_renderer_base {
         $playerid = 'bunnyvideo-player-' . $cm->id;
         $secureurl = \bunnyvideo_generate_signed_url($bunnyvideo->videopath);
 
-        // Use new database fields for tracking
-        $completionEnabled = !empty($bunnyvideo->completion_track);
-        $threshold = isset($bunnyvideo->track_threshold) ? (int)$bunnyvideo->track_threshold : 95;
+        // Use standard completion fields for tracking
+        $completionEnabled = !empty($bunnyvideo->completionvideo);
+        $threshold = isset($bunnyvideo->completionpercent) ? (int)$bunnyvideo->completionpercent : 80;
 
         $progress = [
             'watchtime' => 0,
