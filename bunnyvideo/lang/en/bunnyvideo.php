@@ -43,3 +43,11 @@ $string['defaultcompletionvideo_desc'] = 'If enabled, new Bunny Video activities
 
 $string['completionthreshold'] = 'Default completion percentage';
 $string['completionthreshold_desc'] = 'Default percentage of video watched required for completion, for new activities.';
+
+// Player strings
+$string['progress'] = 'Progress';
+$string['completed'] = 'Completed';
+$string['novideosupport'] = 'Your browser does not support HTML5 video.';
+
+// Misc
+$string['nobunnyvideos'] = 'No Bunny videos found';
